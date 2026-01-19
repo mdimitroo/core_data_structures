@@ -1,9 +1,9 @@
 """
 Class that represents a simple static array structure with basic functionalities
 
-A static array has a FIXED capacity that cannot change after initialization
-When elements are removed, they are shifted left and None is placed at the end
-to maintain the fixed size. This is different from dynamic arrays which can grow
+A static array has a fixed capacity that cannot change after initialization
+When elements are removed,- they are shifted left and None is placed at the end
+to maintain the fixed size
 """
 from Array import Array
 
