@@ -1,21 +1,17 @@
 """
-Class that represents a simple linked list structure with basic functionalities
+Class that represents a double linked list structure with basic functionalities
 
-A simple linked list is a collection of nodes that are linked together using pointers
-Each node contains a value and a pointer to the next node
-The last node points to None
+A double linked list is a collection of nodes that are linked together using pointers
+Each node contains a value and a pointer to the next and previous node
+The first and last nodes point to None
 """
 
-from Linked.Node import Node
+from Linked.Node import DoubleLinkedNode
 
-class SimpleLinkedList:
+class DoubleLinkedList:
     """
-    Simple linked list implementation
-    
-    Key characteristics:
-    - Each node contains a value and a pointer to the next node
+    Double linked list implementation
     """
-
     def __init__(self):
         """
         Initialize an empty linked list
@@ -35,12 +31,14 @@ class SimpleLinkedList:
         """
         return f"LinkedList({self._head})"
 
-    def insert_at_beginning(self, value:any):
+    def insert_at_beginning(self, value):
         """
         Insert a value at the beginning of the linked list
         """
-        new_node = Node(value)
+        new_node = DoubleLinkedNode(value)
         new_node.next = self._head
+        if self._head is not None:
+            self._head.previous = new_node
         self._head = new_node
         self._length += 1
         return
@@ -49,7 +47,7 @@ class SimpleLinkedList:
         """
         Insert a value at the end of the linked list
         """
-        new_node = Node(value)
+        new_node = DoubleLinkedNode(value)
         if self._head is None:
             self._head = new_node
             self._length += 1
@@ -58,10 +56,11 @@ class SimpleLinkedList:
             while current.next is not None:
                 current = current.next
             current.next = new_node
+            new_node.previous = current
             self._length += 1
         return
 
-    def insert_at_index(self, value, index):
+    def insert_at_index(self, value:any, index:int):
         """
         Insert a value at the given index
         """
@@ -73,15 +72,17 @@ class SimpleLinkedList:
             self.insert_at_end(value)
         else:
             # Move to the node BEFORE the insertion point
-            new_node = Node(value)
+            new_node = DoubleLinkedNode(value)
             current = self._head
             for i in range(index - 1):
                 current = current.next
-            new_node.next = current.next
+            tmp = current.next
+            new_node.next = tmp
+            new_node.previous = current
             current.next = new_node
+            tmp.previous = new_node
             self._length += 1
-            return
-    
+        return
 
     def delete_head(self):
         """
@@ -89,8 +90,13 @@ class SimpleLinkedList:
         """
         if self._head is None:
             raise ValueError("Linked list is empty")
-        self._head = self._head.next
-        self._length -= 1
+        if self._length == 1:
+            self._head = None
+            self._length = 0
+        else:
+            self._head = self._head.next
+            self._head.previous = None
+            self._length -= 1
         return
         
     def delete_tail(self):
@@ -100,15 +106,17 @@ class SimpleLinkedList:
         if self._head is None:
             raise ValueError("Linked list is empty")
         if self._length == 1:
-            self.delete_head()
+            self._head = None
+            self._length = 0
         else:
             current = self._head
             while current.next.next is not None:
                 current = current.next
+            current.next.previous = None
             current.next = None
             self._length -= 1
-            return
-
+        return
+    
     def delete_at_index(self, index:int):
         """
         Delete the node at the given index
@@ -124,22 +132,23 @@ class SimpleLinkedList:
             current = self._head
             for i in range(index - 1):
                 current = current.next
-            current.next = current.next.next
+            node_to_delete = current.next
+            current.next = node_to_delete.next
+            node_to_delete.next.previous = current
             self._length -= 1
         return
 
-    def get_at_index(self, index):
+    def get_at_index(self, index:int):
         """
         Get the value at the given index
         """
-        if index < 0 or index > self._length:
+        if index < 0 or index >= self._length:
             raise IndexError("Index out of bounds")
         current = self._head
         for i in range(index):
             current = current.next
         return current.value
 
-    
     def search(self, value:any):
         """
         Search for the given value in the linked list

@@ -11,9 +11,21 @@ class Node:
     Key characteristics:
     - Each node contains a value and a pointer to the next node
     """
-    def __init__(self, value):
+    def __init__(self, value:any):
         self.value = value
         self.next = None
+
+    def __str__(self):
+        """
+        Return a string representation of the node
+        """
+        return str(self.value)
+
+    def __repr__(self):
+        """
+        Return a string representation of the node
+        """
+        return f"Node({self.value})"
 
 class DoubleLinkedNode(Node):
     """
@@ -25,3 +37,15 @@ class DoubleLinkedNode(Node):
     def __init__(self, value):
         super().__init__(value)
         self.previous = None
+
+    def __str__(self):
+        """
+        Return a string representation of the node
+        """
+        return str(self.value)
+
+    def __repr__(self):
+        """
+        Return a string representation of the node
+        """
+        return f"DoubleLinkedNode({self.value})"
